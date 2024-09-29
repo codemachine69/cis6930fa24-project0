@@ -23,10 +23,12 @@ def extract_incidents(incident_data):
         for row in rows:
             if row.startswith('Date / Time'):
                 continue
-            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /]+?)(?:\s+(?=911\s)|(?=\s[A-Z][a-z]))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-\;\.\,]+?)(?:\s+(?=911\s)|(?=\s[A-Z][a-z]))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             match = re.search(pattern, row.strip())
             if match:
                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
+            else:
+                print("LOG : " + row)
     
     return incidents
 
