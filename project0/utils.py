@@ -27,8 +27,6 @@ def extract_incidents(incident_data):
             match = re.search(pattern, row.strip())
             if match:
                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
-            else:
-                print("LOG : " + row)
     
     return incidents
 
