@@ -2,6 +2,7 @@ from project0.utils import extract_incidents
 from pypdf import PdfReader
 import os
 import sqlite3
+import pytest
 
 def test_empty():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
