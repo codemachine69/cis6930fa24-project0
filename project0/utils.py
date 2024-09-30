@@ -6,11 +6,11 @@ import re
 import io
 
 def fetch_incidents(url):
-    os.environ["no_proxy"] = "*"
     headers = {'User-Agent': "Mozilla/5.0"}
     data = urllib.request.urlopen(urllib.request.Request(url, headers=headers)).read() 
     data = io.BytesIO(data)
     return data
+
     
 def extract_incidents(incident_data):
     incidents = []
