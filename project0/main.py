@@ -1,6 +1,7 @@
 import argparse
 import sys
 import utils
+import os
 
 def main(incidents):
     # Download data
@@ -9,6 +10,9 @@ def main(incidents):
     except Exception as e:
         print(f"An unexpected error occurred: {e}")
         sys.exit()
+        
+    #Logger
+    print("RPLOG: " + os.getcwd())
 
     # Extract data
     incidents = utils.extract_incidents(incident_data)

@@ -60,6 +60,7 @@ def create_db():
     
     return conn
 
+
 def populate_db(conn, incidents):
     cursor = conn.cursor()
     
