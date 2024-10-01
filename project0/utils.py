@@ -37,7 +37,7 @@ def extract_incidents(incident_data):
 
 def create_db():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(curr_dir, '..', 'resources', 'normanpd.db')
+    db_path = os.path.abspath('resources/normanpd.db')
     
     if os.path.exists(db_path):
         os.remove(db_path)

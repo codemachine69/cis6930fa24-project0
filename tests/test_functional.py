@@ -28,14 +28,12 @@ def test_rowlen():
         
         
 def test_db_creation():
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(curr_dir, '..', 'resources', 'normanpd.db')
+    db_path = os.path.abspath('resources/normanpd.db')
     
     assert os.path.exists(db_path) == True, "Database file is missing"
     
 def test_db_data():
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.join(curr_dir, '..', 'resources', 'normanpd.db')
+    db_path = os.path.abspath('resources/normanpd.db')
     
     conn = sqlite3.connect(db_path)
     cursor = conn.cursor()
