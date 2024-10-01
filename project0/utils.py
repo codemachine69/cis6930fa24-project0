@@ -36,8 +36,12 @@ def extract_incidents(incident_data):
     return incidents
 
 def create_db():
-    curr_dir = os.path.dirname(os.path.abspath(__file__))
-    db_path = os.path.abspath('resources/normanpd.db')
+    # curr_dir = os.path.dirname(os.path.abspath(__file__))
+    # db_path = os.path.abspath('resources/normanpd.db')
+    
+    curr_path = os.getcwd()
+    db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
+    print("RPLOG db created at : " + db_path)
     
     if os.path.exists(db_path):
         os.remove(db_path)
