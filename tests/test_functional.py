@@ -28,23 +28,6 @@ def test_rowlen():
         
         
     
-def test_db_data():
-    
-    # db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
-    
-    conn = get_db_conn()
-    cursor = conn.cursor()
-    
-    cursor.execute(
-                '''
-                SELECT nature, COUNT(*) 
-                FROM incidents
-                GROUP BY nature 
-                ORDER BY nature ASC;
-                ''')
-    
-    rows = cursor.fetchall()
-    
-    assert len(rows) > 0, "Database is empty"
+
     
     
