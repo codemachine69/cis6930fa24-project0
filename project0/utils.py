@@ -64,6 +64,13 @@ def create_db():
     
     return conn
 
+def get_db_conn():
+    curr_path = os.getcwd()
+    db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
+    
+    conn = sqlite3.connect(db_path)
+    return conn
+
 
 def populate_db(conn, incidents):
     cursor = conn.cursor()

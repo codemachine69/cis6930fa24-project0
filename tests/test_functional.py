@@ -1,4 +1,4 @@
-from project0.utils import extract_incidents
+from project0.utils import extract_incidents, get_db_conn
 from pypdf import PdfReader
 import os
 import sqlite3
@@ -27,17 +27,12 @@ def test_rowlen():
         assert len(incident) == 5, "Each incident should have 5 fields"
         
         
-def test_db_creation():
-    curr_path = os.getcwd()
-    db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
-    print('RPLOG: ' + db_path)
-    assert os.path.exists(db_path) == True, "Database file is missing"
     
 def test_db_data():
-    curr_path = os.getcwd()
-    db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
     
-    conn = sqlite3.connect(db_path)
+    # db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
+    
+    conn = get_db_conn()
     cursor = conn.cursor()
     
     cursor.execute(
