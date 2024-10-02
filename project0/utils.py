@@ -45,7 +45,8 @@ def extract_incidents(incident_data):
             if match:
                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
             else:
-                print('RPLOG : ' + row)
+                # print('RPLOG : ' + row)
+                pass
     
     return incidents
 
