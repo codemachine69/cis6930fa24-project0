@@ -3,6 +3,7 @@ import sys
 import utils
 import os
 
+# Main entry point
 def main(incidents):
     # Download data
     try:

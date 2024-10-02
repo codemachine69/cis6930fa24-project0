@@ -5,13 +5,14 @@ import sqlite3
 import re
 import io
 
+# Fetches the PDF data from the given URL and returns it as a byte stream.
 def fetch_incidents(url):
     headers = {'User-Agent': "Mozilla/5.0"}
     data = urllib.request.urlopen(urllib.request.Request(url, headers=headers)).read() 
     data = io.BytesIO(data)
     return data
 
-    
+# Extracts and parses incidents from the PDF data using regex.    
 def extract_incidents(incident_data):
     incidents = []
     pdfreader = PdfReader(incident_data)
@@ -54,6 +55,7 @@ def extract_incidents(incident_data):
     
     return incidents
 
+# Creates a new SQLite database and 'incidents' table.
 def create_db():    
     curr_path = os.getcwd()
     db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
@@ -79,12 +81,14 @@ def create_db():
     
     return conn
 
+# Establishes and returns a connection to the SQLite database.
 def get_db_conn():
     curr_path = os.getcwd()
     db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
     conn = sqlite3.connect(db_path)
     return conn
 
+# Inserts extracted incident data into the 'incidents' table in the database.
 def populate_db(conn, incidents):
     cursor = conn.cursor()
     
@@ -97,6 +101,7 @@ def populate_db(conn, incidents):
 
     conn.commit()
     
+# Queries and prints the count of incidents grouped by their nature.    
 def status(conn):
     cursor = conn.cursor()
     

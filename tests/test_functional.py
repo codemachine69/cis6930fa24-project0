@@ -4,6 +4,7 @@ import os
 import sqlite3
 import pytest
 
+# Tests if any incidents are extracted from the PDF.
 def test_empty():
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(curr_dir, '..', 'resources', 'incidents.pdf')
@@ -14,7 +15,7 @@ def test_empty():
         
     assert len(incidents) > 0, "No incidents extracted from the PDF"
     
- 
+# Tests that each extracted incident has exactly 5 fields. 
 def test_extract_rowlen():  
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(curr_dir, '..', 'resources', 'incidents.pdf')
@@ -27,7 +28,7 @@ def test_extract_rowlen():
         assert len(incident) == 5, "Each incident should have 5 fields"
         
         
-    
+# Tests if the 'incidents' table is successfully created in the database.    
 def test_db_creation():
     conn = create_db()
     cursor = conn.cursor()
@@ -39,6 +40,7 @@ def test_db_creation():
     rows = cursor.fetchall()
     assert rows is not None, "DB fetch failed (table incidents not created)"
     
+# Tests if demo data is inserted correctly into the 'incidents' table.
 def test_db_population():
     demo_data = [
         ('9/29/2024 0:01', '2024-00070988', '597 S FLOOD AVE', 'Traffic Stop', 'OK0140200'),
