@@ -11,8 +11,6 @@ def main(incidents):
         print(f"An unexpected error occurred: {e}")
         sys.exit()
         
-    #Logger
-    print("RPLOG: " + os.getcwd())
 
     # Extract data
     incidents = utils.extract_incidents(incident_data)
