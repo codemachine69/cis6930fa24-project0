@@ -13,46 +13,71 @@ def fetch_incidents(url):
     return data
 
 # Extracts and parses incidents from the PDF data using regex.    
+# def extract_incidents(incident_data):
+#     incidents = []
+#     pdfreader = PdfReader(incident_data)
+    
+#     for page in pdfreader.pages:
+#         text = page.extract_text()
+#         rows = text.split('\n')
+#         overflow = ''
+#         for row in rows:
+#             #print("LINE: "+row)
+#             if row.startswith('Date / Time'):
+#                 continue
+            
+#             if row[0].isdigit() and not (row.endswith('EMSSTAT') or row.endswith('OK0140200') or row.endswith('14005') or row.endswith('COMMAND') or row.endswith('14009')):
+#                 overflow = row
+#                 continue
+                
+#             row = overflow + row
+            
+            
+#             pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,\<\>\#\&]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            
+#             # Separating incident number and location if no spaces exist
+#             row = re.sub(r'(\d{4}-\d{8})(?=\S)', r'\1 ', row)
+            
+#             # Inserting a space before any uppercase letter followed by lowercase letters if the previous character is uppercase or a symbol
+#             row = re.sub(r'(?<=[A-Z0-9/])(?=[A-Z][a-z])', ' ', row)
+            
+#             # Sometimes this random string shows up while reading in pypdf, removing it
+#             row = row.replace("NORMAN POLICE DEPARTMENT Daily Incident Summary (Public)", "")
+         
+#             match = re.search(pattern, row.strip())
+#             if match:
+#                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
+#             # else:
+#             #     print('RPLOG : ' + row)
+                
+#             # Resetting extra line variable    
+#             overflow = ''
+    
+#     return incidents
+
 def extract_incidents(incident_data):
     incidents = []
     pdfreader = PdfReader(incident_data)
     
     for page in pdfreader.pages:
-        text = page.extract_text()
+        text = page.extract_text(extraction_mode="layout")
         rows = text.split('\n')
-        overflow = ''
+        
         for row in rows:
-            #print("LINE: "+row)
-            if row.startswith('Date / Time'):
+            row.strip()
+            
+            if 'Date / Time' in row or 'Daily Incident' in row or 'NORMAN POLICE DEPARTMENT'in row:
+                continue
+            if len(row) == 0:
                 continue
             
-            if row[0].isdigit() and not (row.endswith('EMSSTAT') or row.endswith('OK0140200') or row.endswith('14005') or row.endswith('COMMAND') or row.endswith('14009')):
-                overflow = row
+            columns = re.split(r'\s{2,}', row)
+            if len(columns) != 5:
+                # print(f"Record doesn't have 5 columns:\n{row}\nParsed columns: {columns}\n")
                 continue
-                
-            row = overflow + row
-            
-            
-            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,\<\>\#\&]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
-            
-            # Separating incident number and location if no spaces exist
-            row = re.sub(r'(\d{4}-\d{8})(?=\S)', r'\1 ', row)
-            
-            # Inserting a space before any uppercase letter followed by lowercase letters if the previous character is uppercase or a symbol
-            row = re.sub(r'(?<=[A-Z0-9/])(?=[A-Z][a-z])', ' ', row)
-            
-            # Sometimes this random string shows up while reading in pypdf, removing it
-            row = row.replace("NORMAN POLICE DEPARTMENT Daily Incident Summary (Public)", "")
-         
-            match = re.search(pattern, row.strip())
-            if match:
-                incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
-            # else:
-            #     print('RPLOG : ' + row)
-                
-            # Resetting extra line variable    
-            overflow = ''
-    
+            incidents.append(tuple(columns))
+    # for incident in incidents:
+    #     print(incident)
     return incidents
 
 # Creates a new SQLite database and 'incidents' table.
