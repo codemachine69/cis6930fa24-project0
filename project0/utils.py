@@ -31,15 +31,16 @@ def extract_incidents(incident_data):
                 
             row = overflow + row
             
-            # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=\s[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$' working
             
-            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,\<\>]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,\<\>\#\&]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             
             # Separating incident number and location
             row = re.sub(r'(\d{4}-\d{8})(?=\S)', r'\1 ', row)
             
             # Inserting a space before any uppercase letter followed by lowercase letters if the previous character is uppercase or a symbol
             row = re.sub(r'(?<=[A-Z0-9/])(?=[A-Z][a-z])', ' ', row)
+            
+            # Sometimes this random string shows up while reading in pypdf, removing it
             row = row.replace("NORMAN POLICE DEPARTMENT Daily Incident Summary (Public)", "")
          
             match = re.search(pattern, row.strip())
@@ -81,10 +82,8 @@ def create_db():
 def get_db_conn():
     curr_path = os.getcwd()
     db_path = os.path.join(curr_path, 'resources', 'normanpd.db')
-    
     conn = sqlite3.connect(db_path)
     return conn
-
 
 def populate_db(conn, incidents):
     cursor = conn.cursor()

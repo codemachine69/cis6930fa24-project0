@@ -1,4 +1,4 @@
-from project0.utils import extract_incidents, get_db_conn
+from project0.utils import extract_incidents, create_db, get_db_conn
 from pypdf import PdfReader
 import os
 import sqlite3
@@ -28,6 +28,42 @@ def test_rowlen():
         
         
     
-
+def test_db_creation():
+    conn = create_db()
+    cursor = conn.cursor()
+    
+    cursor.execute('''
+                   SELECT * 
+                   FROM incidents;
+                   ''')
+    rows = cursor.fetchall()
+    assert rows is not None, "DB fetch failed (table incidents not created)"
+    
+def test_db_population():
+    demo_data = [
+        ('9/29/2024 0:01', '2024-00070988', '597 S FLOOD AVE', 'Traffic Stop', 'OK0140200'),
+        ('9/29/2024 0:04', '2024-00070989', '400 BUCHANAN AVE', 'Foot Patrol', 'OK0140200')
+    ]
+    
+    conn = get_db_conn()
+    cursor = conn.cursor()
+    
+    cursor.executemany(
+                    '''
+                    INSERT INTO incidents
+                    (incident_time, incident_number, incident_location, nature, incident_ori) 
+                    VALUES (?, ?, ?, ?, ?);
+                    ''', demo_data)
+    
+    conn.commit()
+    
+    cursor.execute('''
+                   SELECT * 
+                   FROM incidents;
+                   ''')
+    rows = cursor.fetchall()
+    
+    assert len(rows) == 2, "Demo data not inserted successfully"
+    
     
     
