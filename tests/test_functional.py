@@ -15,7 +15,7 @@ def test_empty():
     assert len(incidents) > 0, "No incidents extracted from the PDF"
     
  
-def test_rowlen():  
+def test_extract_rowlen():  
     curr_dir = os.path.dirname(os.path.abspath(__file__))
     file_path = os.path.join(curr_dir, '..', 'resources', 'incidents.pdf')
     
@@ -65,5 +65,4 @@ def test_db_population():
     
     assert len(rows) == 2, "Demo data not inserted successfully"
     
-    
-    
+        
