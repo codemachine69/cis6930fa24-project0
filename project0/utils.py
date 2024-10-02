@@ -35,7 +35,9 @@ def extract_incidents(incident_data):
             # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\s[A-Z][a-z])|(?=\sCOP DDACTS))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=\s[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$' working
             
-            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            
+            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.\<\>,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             
             # pre-processing before parsing
             row = re.sub(r'(\d)([A-Z])', r'\1 \2', row)
@@ -44,9 +46,9 @@ def extract_incidents(incident_data):
             match = re.search(pattern, row.strip())
             if match:
                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
-            else:
-                # print('RPLOG : ' + row)
-                pass
+            # else:
+            #     print('RPLOG : ' + row)
+                
     
     return incidents
 
