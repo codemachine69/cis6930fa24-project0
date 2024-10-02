@@ -21,27 +21,26 @@ def extract_incidents(incident_data):
         rows = text.split('\n')
         overflow = ''
         for row in rows:
-            if row.startswith('Date / Time') or row.startswith('Daily Incident Summary (Public)'):
+            #print("LINE: "+row)
+            if row.startswith('Date / Time'):
                 continue
             
-            if not (row.endswith('EMSSTAT') or row.endswith('OK0140200') or row.endswith('14005') or row.endswith('14009')):
+            if row[0].isdigit() and not (row.endswith('EMSSTAT') or row.endswith('OK0140200') or row.endswith('14005') or row.endswith('COMMAND') or row.endswith('14009')):
                 overflow = row
                 continue
                 
-            if overflow != '':
-                row = overflow + row
-                overflow = ''
+            row = overflow + row
             
-            # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\s[A-Z][a-z])|(?=\sCOP DDACTS))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=\s[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$' working
             
-            # pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
             
-            pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.\<\>,]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
+            # Separating incident number and location
+            row = re.sub(r'(\d{4}-\d{8})(?=\S)', r'\1 ', row)
             
-            # pre-processing before parsing
-            row = re.sub(r'(\d)([A-Z])', r'\1 \2', row)
+            # Inserting a space before any uppercase letter followed by lowercase letters if the previous character is uppercase or a symbol
             row = re.sub(r'(?<=[A-Z0-9/])(?=[A-Z][a-z])', ' ', row)
+            row = row.replace("NORMAN POLICE DEPARTMENT Daily Incident Summary (Public)", "")
          
             match = re.search(pattern, row.strip())
             if match:
@@ -49,6 +48,8 @@ def extract_incidents(incident_data):
             # else:
             #     print('RPLOG : ' + row)
                 
+            # Resetting extra line variable    
+            overflow = ''
     
     return incidents
 
