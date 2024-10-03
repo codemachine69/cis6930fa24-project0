@@ -6,3 +6,4 @@ SQLite Python Package | https://docs.python.org/3/library/sqlite3.html | Helped 
 CoderPad RegEx Guide | https://coderpad.io/blog/development/the-complete-guide-to-regular-expressions-regex/ | Helped me understand Regular Expressions
 MDN Web Docs RegEx Guide | https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Regular_expressions/Cheatsheet | Helped gain a better understanding of regular expressions
 Data Cleaning using re | https://medium.com/@yashj302/text-cleaning-using-regex-python-f1dded1ac5bd | Helped me gain understanding of pre-processing the data instead of always matching with pattern
+Extract Text From a PDF using pypdf| https://pypdf.readthedocs.io/en/stable/user/extract-text.html | Helped me understand how to efficiently extract text using layout

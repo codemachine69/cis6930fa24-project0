@@ -12,49 +12,7 @@ def fetch_incidents(url):
     data = io.BytesIO(data)
     return data
 
-# Extracts and parses incidents from the PDF data using regex.    
-# def extract_incidents(incident_data):
-#     incidents = []
-#     pdfreader = PdfReader(incident_data)
-    
-#     for page in pdfreader.pages:
-#         text = page.extract_text()
-#         rows = text.split('\n')
-#         overflow = ''
-#         for row in rows:
-#             #print("LINE: "+row)
-#             if row.startswith('Date / Time'):
-#                 continue
-            
-#             if row[0].isdigit() and not (row.endswith('EMSSTAT') or row.endswith('OK0140200') or row.endswith('14005') or row.endswith('COMMAND') or row.endswith('14009')):
-#                 overflow = row
-#                 continue
-                
-#             row = overflow + row
-            
-            
-#             pattern = r'^(\d{1,2}/\d{1,2}/\d{4}\s\d{1,2}:\d{2})\s+(\d{4}-\d{8})\s+((?:\d+\s+)?[A-Z0-9 /\-;.,\<\>\#\&]+?)(?:\s+(?=911\s)|(?=\sMVA)|(?=[A-Z][a-z])|(?=\sCOP))\s*([A-Za-z0-9/\s]+)\s+([A-Z0-9]+)$'
-            
-#             # Separating incident number and location if no spaces exist
-#             row = re.sub(r'(\d{4}-\d{8})(?=\S)', r'\1 ', row)
-            
-#             # Inserting a space before any uppercase letter followed by lowercase letters if the previous character is uppercase or a symbol
-#             row = re.sub(r'(?<=[A-Z0-9/])(?=[A-Z][a-z])', ' ', row)
-            
-#             # Sometimes this random string shows up while reading in pypdf, removing it
-#             row = row.replace("NORMAN POLICE DEPARTMENT Daily Incident Summary (Public)", "")
-         
-#             match = re.search(pattern, row.strip())
-#             if match:
-#                 incidents.append((match.group(1), match.group(2), match.group(3), match.group(4), match.group(5)))
-#             # else:
-#             #     print('RPLOG : ' + row)
-                
-#             # Resetting extra line variable    
-#             overflow = ''
-    
-#     return incidents
-
+# Extracts and parses incidents from the PDF data using pypdf. 
 def extract_incidents(incident_data):
     incidents = []
     pdfreader = PdfReader(incident_data)
@@ -64,14 +22,17 @@ def extract_incidents(incident_data):
         rows = text.split('\n')
         
         for row in rows:
-            row.strip()
+            row = row.strip() # Strippping any excess spaces.
             
-            if 'Date / Time' in row or 'Daily Incident' in row or 'NORMAN POLICE DEPARTMENT'in row:
-                continue
-            if len(row) == 0:
+            if 'Date / Time' in row or 'Daily Incident' in row or 'NORMAN POLICE DEPARTMENT'in row: # Skipping over headers
                 continue
             
-            columns = re.split(r'\s{2,}', row)
+            if len(row) == 0:  # Removing blank rows
+                continue
+            
+            columns = re.split(r'\s{2,}', row) # Split columns if separated by 2 or more spaces.
+            
+            # Incomplete record, ignore it
             if len(columns) != 5:
                 # print(f"Record doesn't have 5 columns:\n{row}\nParsed columns: {columns}\n")
                 continue
