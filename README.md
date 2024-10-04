@@ -29,6 +29,10 @@ For fetching incident data from the Oklahoma PD's website url, use:
 
 `pipenv install <dependency-name>`
 
+## Video on how to run
+
+![Watch the video](https://youtu.be/0XLCju5xVoA)
+
 ## Functions
 
 1. `main()` - This is the core function that ties all the utility functions together in a workflow to achieve the desired result of processing the incidents from the Norman Police Department.
