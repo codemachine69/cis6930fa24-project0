@@ -31,7 +31,7 @@ For fetching incident data from the Oklahoma PD's website url, use:
 
 ## Video on how to run
 
-![Watch the video](https://youtu.be/0XLCju5xVoA)
+[![Watch the video] (https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH-P3Bem5iQFu5BEujSw8teVdBGbKdmJE0ow&s)](https://youtu.be/0XLCju5xVoA)
 
 ## Functions
 
